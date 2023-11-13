@@ -11,9 +11,9 @@ import time
 class Crawler:
 	def __init__(self):
 		self.driver = Driver()
-		self.google = Google(driver.get())
-		self.naver = Naver(driver.get())
-		self.page_crawler = PageCrawler(driver.get())
+		self.google = Google(self.driver.get())
+		self.naver = Naver(self.driver.get())
+		self.page_crawler = PageCrawler(self.driver.get())
 
 	def start(self, keyword) -> list:
 		data = []
