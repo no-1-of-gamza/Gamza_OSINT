@@ -14,20 +14,20 @@ class Crawler:
 
 	def start(self, keyword) -> list:
 		driver = Driver()
-	    google = Google(driver.get())
-	    naver = Naver(driver.get())
+		google = Google(driver.get())
+		naver = Naver(driver.get())
 
-	    data = []
-	    data += google.start(keyword)
-	    data += naver.start(keyword)
+		data = []
+		data += google.start(keyword)
+		data += naver.start(keyword)
 
-	    page_crawler = PageCrawler(driver.get())
-	    for d in data:
-	        content = page_crawler.start(d["url"])
-	        d["content"] = content
-	        time.sleep(3)
+		page_crawler = PageCrawler(driver.get())
+		for d in data:
+			content = page_crawler.start(d["url"])
+			d["content"] = content
+			time.sleep(3)
 
-	    driver.close()
+		driver.close()
 		
 		return data
 
