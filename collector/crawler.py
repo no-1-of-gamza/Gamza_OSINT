@@ -10,24 +10,22 @@ import time
 
 class Crawler:
 	def __init__(self):
-		pass
+		self.driver = Driver()
+		self.google = Google(driver.get())
+		self.naver = Naver(driver.get())
+		self.page_crawler = PageCrawler(driver.get())
 
 	def start(self, keyword) -> list:
-		driver = Driver()
-		google = Google(driver.get())
-		naver = Naver(driver.get())
-
 		data = []
-		data += google.start(keyword)
-		data += naver.start(keyword)
-
-		page_crawler = PageCrawler(driver.get())
+		data += self.google.start(keyword)
+		data += self.naver.start(keyword)
+		
 		for d in data:
-			content = page_crawler.start(d["url"])
+			content = self.page_crawler.start(d["url"])
 			d["content"] = content
 			time.sleep(3)
 
-		driver.close()
+		self.driver.close()
 		
 		return data
 
