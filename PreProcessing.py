@@ -5,12 +5,12 @@ dictionary_list = [
     {'title': '주소지', 'url': 'https:~', 'preview': '미리보기', 'content': '전체 내용'}
 ]
 '''
-import Address
+from util import address
 import json
 
 class Crawling:
     def __init__(self):
-        check = Address()
+        check = address.Address()
         self.api_word = []
     
     # 주소 인근 단어 추출
