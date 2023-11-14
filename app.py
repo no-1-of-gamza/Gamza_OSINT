@@ -80,7 +80,19 @@ class Main:
     
     def OSINT(self):
         detector = TextDetector(self.credentials_path)
-        detector.detect_text(self.file_path)
+        texts_list = detector.detect_text(self.file_path)
+
+        for keyword in texts_list:
+            data += self.google.start(keyword)
+            data += self.naver.start(keyword)   
+
+            for d in data:
+                content = self.page_crawler.start(d["url"])
+                d["content"] = content
+                time.sleep(3) 
+        self.driver.close()
+        
+        return data
 
 
 if __name__ == "__main__":
