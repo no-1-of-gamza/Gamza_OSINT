@@ -8,13 +8,18 @@ class TextDetector:
         self.client = vision.ImageAnnotatorClient()
 
     def is_numeric(self, text):
-        # 문자열이 숫자로만 이루어져 있는지 확인
         return text.isdigit()
 
     def extract_korean_text(self, text):
-        # 한글, 띄어쓰기, 숫자를 포함한 텍스트 추출하는 정규식 패턴 적용
         korean_text = re.sub(r"[^ㄱ-ㅣ가-힣\s0-9]", "", text)
         return korean_text
+
+    def remove_numeric_space(self, text):
+        # 띄어쓰기가 있는 문자열 중에서 숫자로만 이루어진 부분 제거
+        parts = text.split()
+        cleaned_parts = [part for part in parts if not self.is_numeric(part)]
+        cleaned_text = " ".join(cleaned_parts)
+        return cleaned_text
 
     def detect_text(self, image_path):
         with open(image_path, "rb") as image_file:
@@ -31,8 +36,8 @@ class TextDetector:
                 text_description = text.description.strip()
                 lines = text_description.splitlines()
                 korean_lines = [self.extract_korean_text(line) for line in lines]
-                korean_lines = [line for line in korean_lines if line and not self.is_numeric(line)]  # 빈 줄 및 숫자로만 이루어진 텍스트 제외
-                korean_lines = [line.replace(" ", "") for line in korean_lines]  # 띄어쓰기 삭제
+                korean_lines = [line for line in korean_lines if line]  # 빈 줄 제외
+                korean_lines = [self.remove_numeric_space(line) for line in korean_lines]  # 숫자로만 이루어진 부분 제거
                 texts_list.extend(korean_lines)
 
                 vertices = [
@@ -41,8 +46,8 @@ class TextDetector:
 
                 # print("bounds: {}".format(",".join(vertices)))
 
-        # 중복된 단어 제거
-        texts_list = list(set(texts_list))
+        # 빈 문자열 및 빈 리스트 제거
+        texts_list = [text for text in texts_list if text]
 
         if response.error.message:
             raise Exception(
