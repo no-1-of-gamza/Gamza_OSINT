@@ -15,7 +15,6 @@ class TextDetector:
         return korean_text
 
     def remove_numeric_space(self, text):
-        # 띄어쓰기가 있는 문자열 중에서 숫자로만 이루어진 부분 제거
         parts = text.split()
         cleaned_parts = [part for part in parts if not self.is_numeric(part)]
         cleaned_text = " ".join(cleaned_parts)
@@ -36,8 +35,8 @@ class TextDetector:
                 text_description = text.description.strip()
                 lines = text_description.splitlines()
                 korean_lines = [self.extract_korean_text(line) for line in lines]
-                korean_lines = [line for line in korean_lines if line]  # 빈 줄 제외
-                korean_lines = [self.remove_numeric_space(line) for line in korean_lines]  # 숫자로만 이루어진 부분 제거
+                korean_lines = [line for line in korean_lines if line]  
+                korean_lines = [self.remove_numeric_space(line) for line in korean_lines]  
                 texts_list.extend(korean_lines)
 
                 vertices = [
@@ -46,7 +45,6 @@ class TextDetector:
 
                 # print("bounds: {}".format(",".join(vertices)))
 
-        # 빈 문자열 및 빈 리스트 제거
         texts_list = [text for text in texts_list if text]
 
         if response.error.message:
