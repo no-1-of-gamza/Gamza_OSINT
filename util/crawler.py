@@ -68,7 +68,19 @@ class EngineCrawler(abc.ABC):
 		blacklist = [
 			"www.wordreference.com",
 			"dictionary.cambridge.org",
-			"www.dictionary.com"
+			"www.dictionary.com",
+			"www.youtube.com",
+			"m.youtube.com",
+			"ko.wikipedia.org",
+			"wikipedia.org",
+			"ssg.com",
+			"front.homeplus.co.kr",
+			"www.costco.co.kr",
+			"namu.wiki",
+			"www.tiktok.com",
+			"www.daangn.com",
+			"m.bunjang.co.kr",
+			"www.instagram.com"
 		]
 
 		if urlparse(url).netloc in blacklist:
