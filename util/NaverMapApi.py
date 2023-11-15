@@ -33,8 +33,8 @@ class NaverMapApi:
                 if not response:
                     print('No result')
                 else:
-                    print('Success\n')
-                    print(response)
+                    #print('Success\n')
+                    #print(response)
                     return response['items'][0]['address'], response['items'][0]['roadAddress']
             
             else:
