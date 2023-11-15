@@ -5,12 +5,13 @@ dictionary_list = [
     {'title': '주소지', 'url': 'https:~', 'preview': '미리보기', 'content': '전체 내용'}
 ]
 '''
-from util import address
-import json
+from util import Address
+from util import NaverMapApi
 
 class Crawling:
     def __init__(self):
-        check = address.Address()
+        self.check = Address()
+        self.api = NaverMapApi()
         self.api_word = []
     
     # 주소 인근 단어 추출
@@ -39,6 +40,7 @@ class Crawling:
                     separate = 'on'
 
         return result
+
         
     def Pre_Processing(self, crawling_list):
         # 특수 문자 제거
@@ -72,8 +74,10 @@ class Crawling:
         # 중복 제거
         self.api_word = list(set(self.api_word))
 
-        # api
-        
-        
-    
-    
+        # naver api
+        address_dic = {}
+        roadAddress_dic = {}
+        for item in self.api_word:
+            address, roadAddress = self.api.get(item)
+            address_dic[item] = address
+            roadAddress_dic[item] = roadAddress
