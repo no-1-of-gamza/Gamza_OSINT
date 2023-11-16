@@ -281,7 +281,6 @@ class PageCrawler:
 		finally:
 			source = self.driver.page_source
 			text = self.text_from_html(source)
-			print()
 
 		return text
 
