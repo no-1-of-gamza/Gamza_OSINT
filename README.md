@@ -17,6 +17,7 @@
 Open Source Intelligence (OSINT) refers to information obtained from public sources such as SNS and the web. 
 
 OSINT information collection is the most basic method of investigation in cybercrime investigation and investigation, and it is a task that requires search technology from various perspectives.
+
 The theme of this project is the "Image Location Information Inquiry System", which was intended to provide meaningful information by focusing on location information among various disclosed information. 
 
 To this end, related place data was collected through search engine crawling based on text data extracted from images. 
