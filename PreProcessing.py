@@ -77,8 +77,9 @@ class Data_PreProcessing:
         roadAddress_dic = {}
         for item in self.api_word:
             address, roadAddress = self.api.get(item)
-            address_dic[item] = address
-            roadAddress_dic[item] = roadAddress
+            if address is not None and roadAddress is not None:
+                address_dic[item] = address
+                roadAddress_dic[item] = roadAddress
         
         return address_dic, roadAddress_dic
 
