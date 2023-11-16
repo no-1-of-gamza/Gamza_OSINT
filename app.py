@@ -54,9 +54,19 @@ class Main:
             result_add, result_road = self.process_data_with_retry(data, keyword)
             print("------------------------------------------------------")
             print(f"Keyword: {keyword}\n")
-            print("Address:\n", result_add,"\n")
-            print("Road Address:\n", result_road,"\n")
+
+            if result_add:
+                print("[Address]\n")
+                for key, value in result_add.items():
+                    print(f"    {key}: {value}")
+            
+            if result_road:
+                print("\n[Road Address]\n")
+                for key, value in result_road.items():
+                    print(f"    {key}: {value}")
+            
             print("------------------------------------------------------")
+
 
     def process_data_with_retry(self, data, keyword, max_retries=3):
         for _ in range(max_retries):
