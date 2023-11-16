@@ -32,8 +32,6 @@ Through these programs, it was intended to help quickly and conveniently collect
 ## Usage
 
 0. Setting Google Cloud Vision API and Get a key from Google Cloud, Naver Map API
-1. Insert Data Config ini ( File Path, Google Key, etc..)
-2. Run app.py and Wait processing
-
-
+2. Insert Data Config ini ( File Path, Google Key, etc..)
+3. Run app.py and Wait processing
 
