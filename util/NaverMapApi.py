@@ -37,8 +37,6 @@ class NaverMapApi:
                     return None, None
 
                 else:
-                    #print('Success\n')
-                    #print(response)
                     return response['items'][0]['address'], response['items'][0]['roadAddress']
             
             else:
