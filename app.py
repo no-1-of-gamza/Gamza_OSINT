@@ -14,17 +14,13 @@ class Main:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
 
-        self.file_path = self.config['IMAGE_FILE'].get('FilePath', self.config['DEFAULT']['FilePath'])
-        self.credentials_path = self.config['CREDENTIALS_PATH'].get('Credentials_path', self.config['DEFAULT']['CREDENTIALS_PATH'])
-      
-    def save_config(self):
-        with open('config.ini', 'w') as configfile:
-            self.config.write(configfile)
+        self.file_path = self.config.get('IMAGE_FILE', 'FilePath', fallback=self.config.get('DEFAULT', 'FilePath'))
+        self.credentials_path = self.config.get('CREDENTIALS_PATH', 'Credentials_path', fallback=self.config.get('DEFAULT', 'CREDENTIALS_PATH'))
 
     def start(self):
         self.print_welcome()
         time.sleep(0.1)
-        print("File: " + self.file_path)
+        print(f"File: {self.file_path}")
         self.OSINT()
 
     def print_welcome(self):
@@ -45,22 +41,21 @@ class Main:
         Have a nice time ~ ( ^ᴗ^ )♡ ~
         """
         print(welcome_message)
-    
-    def OSINT(self):
+        print("------------------------------------------------------")
+
+    def OSINT(self):    
         detector = TextDetector(self.credentials_path)
         texts_list = detector.detect_text(self.file_path)
+        print(f"Detect Keywords: {', '.join(texts_list)}")
 
         for keyword in texts_list:
             data = Data_PreProcessing()
             result_add, result_road = self.process_data_with_retry(data, keyword)
-            if result_add is not None and result_road is not None:
-                print("address:\n", result_add)
-                print("\n")
-                print("road address:\n", result_road)
-            else:
-                print("No address information found for keyword:", keyword)
-
-        return data
+            print("------------------------------------------------------")
+            print(f"Keyword: {keyword}")
+            print("Address:\n", result_add)
+            print("Road Address:\n", result_road)
+            print("------------------------------------------------------")
 
     def process_data_with_retry(self, data, keyword, max_retries=3):
         for _ in range(max_retries):
@@ -70,7 +65,7 @@ class Main:
             except requests.exceptions.HTTPError as e:
                 if e.response.status_code == 429:
                     print(f"Rate limited, retrying in a moment...")
-                    time.sleep(2)  # 재시도 대기 시간
+                    time.sleep(2)
                 else:
                     print(f"HTTP Error: {e}")
                     break
