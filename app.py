@@ -3,6 +3,8 @@ import os
 import configparser
 import time
 from image_to_text_API import TextDetector
+from PreProcessing import Data_PreProcessing
+import requests.exceptions
 
 class Main:
     def __init__(self):
@@ -12,38 +14,14 @@ class Main:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
 
-        self.file_path = self.config['IMAGE_FILE'].get('FilePath', self.config['DEFAULT']['FilePath'])
-        self.credentials_path = self.config['CREDENTIALS_PATH'].get('Credentials_path', self.config['DEFAULT']['CREDENTIALS_PATH'])
-      
-    def save_config(self):
-        with open('config.ini', 'w') as configfile:
-            self.config.write(configfile)
+        self.file_path = self.config.get('IMAGE_FILE', 'FilePath', fallback=self.config.get('DEFAULT', 'FilePath'))
+        self.credentials_path = self.config.get('CREDENTIALS_PATH', 'Credentials_path', fallback=self.config.get('DEFAULT', 'CREDENTIALS_PATH'))
 
     def start(self):
         self.print_welcome()
         time.sleep(0.1)
-        while True:
-            command = input(">>> ").split(" ")
-            if command[0] == "":
-                pass
-
-            elif command[0] == "exit":
-                option = input("Are you sure to exit program? (ˊ࿁ˋ )ᐝ <yes(default)/no>: ")
-                option = option.lower()
-                if option == 'no' or option == 'n':
-                    continue               
-                sys.exit(0)
-
-            elif command[0] == "help":
-                self.help()
-
-            elif command[0] == "start":
-                self.OSINT()
-
-                        
-            else:
-                print("\'{}\' is invalid command.\n".format(" ".join(command)))
-                self.help()
+        print(f"File: {self.file_path}")
+        self.OSINT()
 
     def print_welcome(self):
         welcome_message = r"""
@@ -58,42 +36,55 @@ class Main:
             | | | |\ `--.   | |  |  \| |  | |  
             | | | | `--. \  | |  | . ` |  | |  
             \ \_/ //\__/ / _| |_ | |\  |  | |  
-            \___/ \____/  \___/ \_| \_/  \_/  
-                                                                                                                                                                                                                                                                  
-        To know how to use, use 'help' command.
+             \___/ \____/  \___/ \_| \_/  \_/  
+        Please wait a moment without turning off the program until you return the results!     
         Have a nice time ~ ( ^ᴗ^ )♡ ~
         """
         print(welcome_message)
+        print("------------------------------------------------------")
 
-    def exit(self):
-        sys.exit(0)        
-        
-    def help(self):
-        help = {
-            "start": "Identify location information based on the text in the image.",
-        }
-
-        print("usage:", end="\n\n")
-        for command in help.keys():
-            print("{0:35s}\t{1:s}".format(command, help[command]))
-        print()
-    
-    def OSINT(self):
+    def OSINT(self):    
         detector = TextDetector(self.credentials_path)
         texts_list = detector.detect_text(self.file_path)
+        print(f"Detect Keywords: {', '.join(texts_list)}")
+        print("------------------------------------------------------")
 
         for keyword in texts_list:
-            data += self.google.start(keyword)
-            data += self.naver.start(keyword)   
+            data = Data_PreProcessing()
+            result_add, result_road = self.process_data_with_retry(data, keyword)
+            print("------------------------------------------------------")
+            print(f"Keyword: {keyword}\n")
 
-            for d in data:
-                content = self.page_crawler.start(d["url"])
-                d["content"] = content
-                time.sleep(3) 
-        self.driver.close()
-        
-        return data
+            if result_add:
+                print("[Address]\n")
+                for key, value in result_add.items():
+                    print(f"    {key}: {value}")
+            
+            if result_road:
+                print("\n[Road Address]\n")
+                for key, value in result_road.items():
+                    print(f"    {key}: {value}")
+            
+            print("------------------------------------------------------")
 
+
+    def process_data_with_retry(self, data, keyword, max_retries=3):
+        for _ in range(max_retries):
+            try:
+                result_add, result_road = data.start(keyword)
+                return result_add, result_road
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 429:
+                    print(f"Rate limited, retrying in a moment...")
+                    time.sleep(2)
+                else:
+                    print(f"HTTP Error: {e}")
+                    break
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                break
+
+        return None, None
 
 if __name__ == "__main__":
     main = Main()

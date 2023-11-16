@@ -76,20 +76,24 @@ class Data_PreProcessing:
         address_dic = {}
         roadAddress_dic = {}
         for item in self.api_word:
-            address, roadAddress = self.api.get(item)
-            address_dic[item] = address
-            roadAddress_dic[item] = roadAddress
+                    address, roadAddress = self.api.get(item)
+                    if address is None or roadAddress is None:
+                        pass
+                    else: 
+                        address_dic[item] = address
+                        roadAddress_dic[item] = roadAddress
         
         return address_dic, roadAddress_dic
 
-    def start(self):
-        image_text = "성북구 동선동 2가 에그맛있다"
+    def start(self, image_text):
+        
         crawling_list = self.crawler.start(image_text)
         result_add, result_road = self.Pre_Processing(crawling_list)
         return result_add, result_road
 
 if __name__ == "__main__":
     data = Data_PreProcessing()
+    image_text = "성북구 동선동 2가 에그맛있다"
     result_add, result_road = data.start()
     print("address: \n", result_add)
     print("\n")

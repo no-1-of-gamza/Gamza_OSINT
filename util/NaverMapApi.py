@@ -32,9 +32,11 @@ class NaverMapApi:
 
                 if not response:
                     print('No result')
+                
+                elif len(response['items']) == 0:
+                    return None, None
+
                 else:
-                    #print('Success\n')
-                    #print(response)
                     return response['items'][0]['address'], response['items'][0]['roadAddress']
             
             else:
@@ -44,5 +46,5 @@ if __name__ == '__main__':
     keyword = '성북구 에그맛있다'
     api = NaverMapApi()
 
-    api.get(keyword)
+    print(api.get(keyword))
 

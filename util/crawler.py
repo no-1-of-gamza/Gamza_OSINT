@@ -34,9 +34,6 @@ class Driver:
 	def __init__(self):
 		self.options = webdriver.ChromeOptions()
 		self.options.add_experimental_option("excludeSwitches", ["enable-logging"])
-		# self.options.add_argument("headless")
-		# self.options.add_argument("window-size=1920x1080")
-		# self.options.add_argument("disable-gpu")
 		self.driver = webdriver.Chrome(options=self.options)
 		self.driver.set_page_load_timeout(10)
 		
@@ -281,7 +278,6 @@ class PageCrawler:
 		finally:
 			source = self.driver.page_source
 			text = self.text_from_html(source)
-			print()
 
 		return text
 
