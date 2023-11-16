@@ -47,14 +47,15 @@ class Main:
         detector = TextDetector(self.credentials_path)
         texts_list = detector.detect_text(self.file_path)
         print(f"Detect Keywords: {', '.join(texts_list)}")
+        print("------------------------------------------------------")
 
         for keyword in texts_list:
             data = Data_PreProcessing()
             result_add, result_road = self.process_data_with_retry(data, keyword)
             print("------------------------------------------------------")
-            print(f"Keyword: {keyword}")
-            print("Address:\n", result_add)
-            print("Road Address:\n", result_road)
+            print(f"Keyword: {keyword}\n")
+            print("Address:\n", result_add,"\n")
+            print("Road Address:\n", result_road,"\n")
             print("------------------------------------------------------")
 
     def process_data_with_retry(self, data, keyword, max_retries=3):
