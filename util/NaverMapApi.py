@@ -6,8 +6,8 @@ import json
 
 class NaverMapApi:
     def __init__(self):
-        self.Client_ID = 'Yws8bUSY4DK2vcWBShu7'
-        self.Client_Secret = 'ILE_EKhNGw'
+        self.Client_ID = ''
+        self.Client_Secret = ''
         self.api_url = 'https://openapi.naver.com/v1/search/local.json?query='
 
     def get(self, keyword):
